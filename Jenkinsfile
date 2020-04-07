@@ -33,7 +33,7 @@ pipeline {
                 dir("app") {
                     script {
                         sh "npm install"
-                        sh "npm run"
+                        sh "npm run build"
                     }
                 }
             }
