@@ -62,7 +62,7 @@ pipeline {
 
 
         stage('Create Image Builder') {
-            /when {
+            when {
                 expression {
                     openshift.withCluster() {
                         openshift.withProject(DEV_PROJECT) {
