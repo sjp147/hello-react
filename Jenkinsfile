@@ -46,7 +46,7 @@ pipeline {
                         artifactFolder = "${ARTIFACT_FOLDER}",
                         fullFileName   = "${safeBuildName}.tar.gz",
                         applicationZip = "${artifactFolder}/${fullFileName}"
-                        applicationDir = ["build",
+                        applicationDir = ["app/build",
                                             "nginx.conf",
                                             "Dockerfile",
                                             ].join(" ");
