@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        node {label 'python'}
+        node {label 'nodejs'}
     }
     environment {
         APPLICATION_NAME = 'hello-react'
