@@ -19,13 +19,14 @@ pipeline {
                 git branch: "${GIT_BRANCH}", url: "${GIT_REPO}"
             }
         }
-        stage ("Install Dependencies") {
+  
+  /**      stage ("Install Dependencies") {
            
         }
 
         stage('Run Tests') {
 
-        }
+        }**/
 
         stage('Create web app'){
             steps{
