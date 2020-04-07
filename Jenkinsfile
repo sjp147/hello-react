@@ -30,10 +30,11 @@ pipeline {
 
         stage('Create web app'){
             steps{
-                script {
-                sh "cd app"
-                sh "npm install"
-                sh "npm run build"
+                dir("app") {
+                    script {
+                        sh "npm install"
+                        sh "npm run"
+                    }
                 }
             }
         }
