@@ -2,8 +2,8 @@ apiVersion: v1
 kind: BuildConfig
 metadata:
   labels:
-    app: hello-react
-  name: hello-react
+    app: hello-react-pipeline
+  name: hello-react-pipeline
 spec:
   source:
     git:

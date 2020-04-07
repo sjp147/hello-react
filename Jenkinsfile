@@ -32,7 +32,7 @@ pipeline {
             steps{
                 dir("app") {
                     script {
-                        sh "npm install"
+                        sh "npm ci"
                         sh "npm run build"
                     }
                 }
@@ -81,6 +81,7 @@ pipeline {
                 }
             }
         }
+
         stage('Build Image') {
             steps {
                 script {
