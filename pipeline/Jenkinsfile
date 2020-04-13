@@ -19,16 +19,8 @@ pipeline {
                 git branch: "${GIT_BRANCH}", url: "${GIT_REPO}"
             }
         }
-  
-  /**      stage ("Install Dependencies") {
-           
-        }
 
-        stage('Run Tests') {
-
-        }**/
-
-        stage('Create web app'){
+        stage('Build web app'){
             steps{
                 dir("app") {
                     script {
@@ -39,7 +31,7 @@ pipeline {
             }
         }
 
-         stage('Store web app'){
+         stage('Publish artifacts'){
             steps{
                 script{
                     def safeBuildName  = "${APPLICATION_NAME}_${BUILD_NUMBER}",
@@ -47,8 +39,8 @@ pipeline {
                         fullFileName   = "${safeBuildName}.tar.gz",
                         applicationZip = "${artifactFolder}/${fullFileName}"
                         applicationDir = ["app/build",
-                                            "nginx.conf",
-                                            "Dockerfile",
+                                            "container/nginx.conf",
+                                            "container/Dockerfile",
                                             ].join(" ");
                     def needTargetPath = !fileExists("${artifactFolder}")
                     if (needTargetPath) {
@@ -61,7 +53,7 @@ pipeline {
         }
 
 
-        stage('Create Image Builder') {
+        stage('Build image') {
             when {
                 expression {
                     openshift.withCluster() {
@@ -82,7 +74,6 @@ pipeline {
             }
         }
 
-        stage('Build Image') {
             steps {
                 script {
                     openshift.withCluster() {
@@ -92,7 +83,7 @@ pipeline {
                     }
                 }
             }
-        }
+
         stage('Deploy to DEV') {
             when {
                 expression {
@@ -144,13 +135,6 @@ pipeline {
                         }
                     }
                 } 
-            }
-        }
-        stage('Scale in STAGE') {
-            steps {
-                script {
-                    openshiftScale(namespace: "${STAGE_PROJECT}", deploymentConfig: "${TEMPLATE_NAME}", replicaCount: '3')
-                }
             }
         }
     }
