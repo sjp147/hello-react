@@ -14,6 +14,8 @@ pipeline {
         PORT = 8081;
     }
     stages {
+
+
         stage('Get Latest Code') {
             steps {
                 git branch: "${GIT_BRANCH}", url: "${GIT_REPO}"
@@ -82,6 +84,7 @@ pipeline {
                     }
                 }
             }
+        }
 
         stage('Deploy to DEV') {
             when {
