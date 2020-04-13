@@ -93,11 +93,21 @@ pipeline {
                     openshift.withCluster() {
                         openshift.withProject(env.DEV_PROJECT) {
 
-                        openshift.tag("${APPLICATION_NAME}:latest", "192.168.1.103:5000/${APPLICATION_NAME}-dev:latest") 
+                        openshift.tag("${APPLICATION_NAME}:latest", "${APPLICATION_NAME}-dev:${env.GIT_COMMIT}") 
                         }
                     }
                 }
+                container('tools') {
+                    sh "git clone https://$GIT_CREDS_USR:$GIT_CREDS_PSW@github.com/sjp147/hello-config.git"
+                    sh "git config --global user.email 'ci@ci.com'"
+
+                    dir("argocd-demo-deploy") {
+                        sh "cd ./e2e && kustomize edit set image dev/hello-react:${env.GIT_COMMIT}"
+                        sh "git commit -am 'Publish new version' && git push || echo 'no changes'"
+          }
+                }
             }
+
         }
 
     }
