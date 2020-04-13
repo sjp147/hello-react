@@ -11,7 +11,7 @@ spec:
       uri: https://github.com/sjp147/hello-react.git
   strategy:
     jenkinsPipelineStrategy:
-      jenkinsfilePath: Jenkinsfile
+      jenkinsfilePath: pipeline/Jenkinsfile
     type: JenkinsPipeline
   triggers:
     - github:
