@@ -54,10 +54,8 @@ pipeline {
             }
         }
 
-
-        stage('Build image') {
-  
-            when {
+        stage('Create image builder') {
+                        when {
                 expression {
                     openshift.withCluster() {
                         openshift.withProject(DEV_PROJECT) {
@@ -65,6 +63,7 @@ pipeline {
                         }
                 }
             }
+            steps {
             script {
                 openshift.withCluster() {
                     openshift.withProject(DEV_PROJECT) {
@@ -73,6 +72,9 @@ pipeline {
                     }
                 }
             }
+            }
+        }
+        stage('Build image') {
 
             steps {
                 script {
