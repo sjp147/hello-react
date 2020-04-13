@@ -40,7 +40,7 @@ pipeline {
                         applicationZip = "${artifactFolder}/${fullFileName}"
                         applicationDir = ["app/build",
                                             "container/nginx.conf",
-                                            "container/Dockerfile",
+                                            "Dockerfile",
                                             ].join(" ");
                     def needTargetPath = !fileExists("${artifactFolder}")
                     if (needTargetPath) {
@@ -79,7 +79,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(env.DEV_PROJECT) {
-                            openshift.selector("bc", "$TEMPLATE_NAME").startBuild("--context-dir=container --from-archive=${ARTIFACT_FOLDER}/${APPLICATION_NAME}_${BUILD_NUMBER}.tar.gz", "--wait=true")
+                            openshift.selector("bc", "$TEMPLATE_NAME").startBuild("--from-archive=${ARTIFACT_FOLDER}/${APPLICATION_NAME}_${BUILD_NUMBER}.tar.gz", "--wait=true")
                         }
                     }
                 }
