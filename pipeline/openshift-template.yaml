@@ -39,7 +39,7 @@ spec:
     jenkinsPipelineStrategy:
       jenkinsfilePath: pipeline/Jenkinsfile
     type: JenkinsPipeline
-  triggers:[]
+  triggers: []
     },
 
       {
