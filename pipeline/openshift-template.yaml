@@ -39,16 +39,7 @@ spec:
     jenkinsPipelineStrategy:
       jenkinsfilePath: pipeline/Jenkinsfile
     type: JenkinsPipeline
-  triggers:
-    - github:
-        secret: secret
-      type: GitHub
-    - generic:
-        secret: secret
-      type: Generic
-    - bitbucket:
-        secret: secret
-      type: Bitbucket
+  triggers:[]
     },
 
       {
