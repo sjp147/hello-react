@@ -99,7 +99,7 @@ pipeline {
                 }
                 container('tools') {
                     sh "env"
-                    sh "git clone https://$GIT_CREDS_USR:$GIT_CREDS_PSW@github.com/sjp147/hello-config.git"
+                    sh 'git clone https://$GIT_CREDS_USR:$GIT_CREDS_PSW@github.com/sjp147/hello-config.git'
                     dir("hello-config") {
                         sh "git config --local user.email 'you@example.com'"
                         sh "git config --local user.name 'Your Name'"
