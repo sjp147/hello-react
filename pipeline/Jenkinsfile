@@ -93,7 +93,7 @@ pipeline {
                     openshift.withCluster() {
                         openshift.withProject(env.DEV_PROJECT) {
 
-                        openshift.tag("${APPLICATION_NAME}:latest", "${APPLICATION_NAME}-dev:${env.GIT_COMMIT}") 
+                        openshift.tag("${APPLICATION_NAME}:latest", "${APPLICATION_NAME}:${env.GIT_COMMIT}") 
                         }
                     }
                 }
