@@ -98,11 +98,11 @@ pipeline {
                     }
                 }
                 container('tools') {
-                    sh "git clone https://$GIT_CREDS_USR:$GIT_CREDS_PSW@github.com/sjp147/hello-config.git"
+                    sh "git clone https://${env.GIT_CREDS_USR}:${env.$GIT_CREDS_PSW}@github.com/sjp147/hello-config.git"
                     sh "git config --global user.email 'ci@ci.com'"
 
-                    dir("argocd-demo-deploy") {
-                        sh "cd ./e2e && kustomize edit set image dev/hello-react:${env.GIT_COMMIT}"
+                    dir("hello-config") {
+                        sh "cd ./dev && kustomize edit set image dev/hello-react:${env.GIT_COMMIT}"
                         sh "git commit -am 'Publish new version' && git push || echo 'no changes'"
           }
                 }
