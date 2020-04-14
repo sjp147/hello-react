@@ -100,6 +100,9 @@ pipeline {
                 container('tools') {
                     sh "git clone https://${env.GIT_CREDS_USR}:${env.$GIT_CREDS_PSW}@github.com/sjp147/hello-config.git"
                     dir("hello-config") {
+                        git config --local user.email "you@example.com"
+                        git config --local user.name "Your Name"
+
                         sh "cd ./dev && kustomize edit set image dev/hello-react:${env.GIT_COMMIT}"
                         sh "git commit -am 'Publish new version' && git push || echo 'no changes'"
           }
