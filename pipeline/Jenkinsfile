@@ -4,7 +4,7 @@ pipeline {
         kubernetes {
         label 'jenkins-slave'
         defaultContainer 'jnlp'
-yaml """
+        yaml """
 apiVersion: v1
 kind: Pod
 spec:
@@ -13,12 +13,12 @@ spec:
       image: docker.io/openshift/jenkins-agent-nodejs-8-centos7:v3.11
       command:
       - cat
-        tty: true
+      tty: true
     - name: tools
       image: argoproj/argo-cd-ci-builder:v0.13.1
       command:
       - cat
-        tty: true
+      tty: true
 """
         }
     }
