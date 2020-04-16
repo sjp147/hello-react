@@ -125,7 +125,7 @@ spec:
 
                         sh "cd ./dev && kustomize edit set image 172.30.1.1:5000/dev/hello-react:${env.GIT_COMMIT}"
                         sh "git diff"
-                        sh "git commit -am 'Publish new version' && git push || echo 'no changes'"
+                        sh "git commit -am 'Publish new version' && git push -set-upstream origin master|| echo 'no changes'"
                     
                 }
             }
