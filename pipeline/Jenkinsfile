@@ -1,7 +1,28 @@
 pipeline {
+
     agent {
-        node {label 'nodejs'}
+        kubernetes {
+        label 'jenkins-slave'
+        defaultContainer 'jnlp'
+        yaml """
+            apiVersion: v1
+            kind: Pod
+            spec:
+            containers:
+            - name: nodejs
+                image: docker.io/openshift/jenkins-agent-nodejs-8-centos7:v3.11
+                command:
+                - cat
+                tty: true
+            - name: tools
+                image: argoproj/argo-cd-ci-builder:v0.13.1
+                command:
+                - cat
+                tty: true
+            """
+        }
     }
+
     environment {
         APPLICATION_NAME = 'hello-react'
         GIT_REPO="https://github.com/sjp147/hello-react.git"
@@ -23,11 +44,13 @@ pipeline {
 
         stage('Create web app'){
             steps{
+                container('nodejs') {
                 dir("app") {
                     script {
                         sh "npm ci"
                         sh "npm run build"
                     }
+                }
                 }
             }
         }
