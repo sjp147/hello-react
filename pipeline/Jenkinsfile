@@ -1,7 +1,6 @@
 pipeline {
 
     agent {
-        kubernetes {
         label 'jenkins-slave'
         defaultContainer 'jnlp'
         yaml """
@@ -20,7 +19,6 @@ pipeline {
                 - cat
                 tty: true
             """
-        }
     }
 
     environment {
