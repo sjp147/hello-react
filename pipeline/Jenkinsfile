@@ -9,10 +9,8 @@ apiVersion: v1
 kind: Pod
 spec:
     containers:
-    - name: nodejs
+    - name: jnlp
       image: openshift/jenkins-agent-nodejs-8-centos7:v3.11
-      command:
-      - cat
       tty: true
     - name: tools
       image: argoproj/argo-cd-ci-builder:latest
