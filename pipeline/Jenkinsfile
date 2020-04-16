@@ -118,8 +118,9 @@ spec:
                 }
                 container('tools') {
                     sh "env"
-                    sh 'git clone https://$GIT_CREDS_USR:$GIT_CREDS_PSW@github.com/sjp147/hello-config.git'
-                    dir("hello-config") {
+                    git url: "ssh://git@github.com:sjp147/hello-react.git",
+                        credentialsId: 'git'
+                        dir("hello-config") {
                         sh "git config --local user.email 'you@example.com'"
                         sh "git config --local user.name 'Your Name'"
 
