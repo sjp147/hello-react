@@ -3,13 +3,13 @@ pipeline {
     agent {
         kubernetes {
         label 'jenkins-slave'
-        defaultContainer 'nodejs'
+        defaultContainer 'jnlp'
         yaml """
 apiVersion: v1
 kind: Pod
 spec:
     containers:
-    - name: nodejs
+    - name: jnlp
       image: openshift/jenkins-agent-nodejs-8-centos7:v3.11
       command:
       - cat
@@ -44,14 +44,12 @@ spec:
 
         stage('Create web app'){
             steps{
-                container('nodejs') {
                     dir("app") {
 
                             sh "npm ci"
                             sh "npm run build"
 
                     }
-                }
             }
         }
 
