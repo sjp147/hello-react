@@ -119,7 +119,8 @@ spec:
                 container('tools') {
                     sh "env"
                     git url: 'ssh://git@github.com/sjp147/hello-config.git',
-                        credentialsId: 'git', branch 'master'
+                        credentialsId: 'git', 
+                        branch 'master'
                         sh "git config --local user.email 'you@example.com'"
                         sh "git config --local user.name 'Your Name'"
 
