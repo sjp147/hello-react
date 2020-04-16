@@ -1,8 +1,8 @@
 pipeline {
 
     agent {
-        openshift {
         label 'jenkins-slave'
+        cloud 'openshift'
         defaultContainer 'jnlp'
         yaml """
             apiVersion: v1
@@ -20,7 +20,6 @@ pipeline {
                 - cat
                 tty: true
             """
-        }
     }
 
     environment {
