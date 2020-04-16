@@ -10,12 +10,12 @@ kind: Pod
 spec:
     containers:
     - name: nodejs
-      image: docker.io/openshift/jenkins-agent-nodejs-8-centos7:v3.11
+      image: openshift/jenkins-agent-nodejs-8-centos7:v3.11
       command:
       - cat
       tty: true
     - name: tools
-      image: argoproj/argo-cd-ci-builder:v0.13.1
+      image: argoproj/argo-cd-ci-builder:latest
       command:
       - cat
       tty: true
