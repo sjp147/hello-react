@@ -121,7 +121,7 @@ spec:
                         withCredentials([sshUserPrivateKey(credentialsId: 'git', keyFileVariable: 'SSH_KEY')]) {
                             sh """
                             GIT_SSH_COMMAND='ssh -i $SSH_KEY'
-                            git clone git@github.com:sjp147/hello-config.git
+                            git clone ssh://git@github.com/sjp147/hello-config.git
                                                         
                             git config --local user.email 'you@example.com'
                             git config --local user.name 'Your Name'
