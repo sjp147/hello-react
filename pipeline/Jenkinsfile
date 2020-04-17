@@ -123,7 +123,6 @@ spec:
                                 withEnv(["GIT_SSH_COMMAND=ssh -o StrictHostKeyChecking=no -o User=${SSH_USER} -i ${SSH_KEY}"]) {
                             
                             sh """
-                            GIT_SSH_COMMAND='ssh -i $SSH_KEY'
                             git clone ssh://git@github.com/sjp147/hello-config.git
                                                         
                             git config --local user.email 'you@example.com'
