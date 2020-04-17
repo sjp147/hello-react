@@ -120,6 +120,7 @@ spec:
 
                         withCredentials([sshUserPrivateKey(credentialsId: 'git', keyFileVariable: 'SSH_KEY')]) {
                             sh """
+                            cat ~/.ssh/id_rsa.pub
                             GIT_SSH_COMMAND='ssh -i $SSH_KEY'
                             git clone ssh://git@github.com/sjp147/hello-config.git
                                                         
