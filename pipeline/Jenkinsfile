@@ -122,16 +122,15 @@ spec:
                      
                                 withEnv(["GIT_SSH_COMMAND=ssh -o StrictHostKeyChecking=no -o User=${SSH_USER} -i ${SSH_KEY}"]) {
                             
-                            sh """
-                            git clone ssh://git@github.com/sjp147/hello-config.git
+                            sh "git clone ssh://git@github.com/sjp147/hello-config.git"
                                                         
-                            git config --local user.email 'you@example.com'
-                            git config --local user.name 'Your Name'
+                            sh "git config --local user.email 'you@example.com'"
+                            sh "git config --local user.name 'Your Name'"
 
-                            cd ./dev && kustomize edit set image 172.30.1.1:5000/dev/hello-react:${env.GIT_COMMIT}
-                            git diff
-                            git commit -am 'Publish new version' && git push origin master|| echo 'no changes'
-                            """
+                            sh "cd ./dev && kustomize edit set image 172.30.1.1:5000/dev/hello-react:${env.GIT_COMMIT}"
+                            sh "git diff"
+                            sh "git commit -am 'Publish new version' && git push origin master|| echo 'no changes'"
+                            
                                 }
                         }
                     }
