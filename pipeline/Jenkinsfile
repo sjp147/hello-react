@@ -118,7 +118,10 @@ spec:
                 }
                     container('tools') {
 
-                        withCredentials([sshUserPrivateKey(credentialsId: 'git', keyFileVariable: 'SSH_KEY')]) {
+                        withCredentials([sshUserPrivateKey(credentialsId: 'git', keyFileVariable: 'SSH_KEY', usernameVariable: 'SSH_USER')]) {
+                     
+                                withEnv(["GIT_SSH_COMMAND=ssh -o StrictHostKeyChecking=no -o User=${SSH_USER} -i ${SSH_KEY}"]) {
+                            
                             sh """
                             cat ~/.ssh/id_rsa.pub
                             GIT_SSH_COMMAND='ssh -i $SSH_KEY'
@@ -131,6 +134,7 @@ spec:
                             git diff
                             git commit -am 'Publish new version' && git push origin master|| echo 'no changes'
                             """
+                                }
                         }
                     }
             }
