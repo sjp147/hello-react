@@ -118,10 +118,8 @@ spec:
                 }
                     container('tools') {
 
-                        withCredentials([sshUserPrivateKey(credentialsId: 'git', keyFileVariable: 'SSH_KEY', usernameVariable: 'SSH_USER')]) {
-                     
-                                withEnv(["GIT_SSH_COMMAND=ssh -o StrictHostKeyChecking=no -o User=${SSH_USER} -i ${SSH_KEY}"]) {
-                            
+                        sshagent(['git']) {
+                                                 
                             sh "git clone git@github.com:sjp147/hello-config.git"
                                                         
                             sh "git config --local user.email 'you@example.com'"
@@ -131,7 +129,7 @@ spec:
                             sh "git diff"
                             sh "git commit -am 'Publish new version' && git push origin master|| echo 'no changes'"
                             
-                                }
+                                
                         }
                     }
             }
