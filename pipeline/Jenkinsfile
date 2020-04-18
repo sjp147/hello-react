@@ -4,8 +4,7 @@ podTemplate(containers: [
     containerTemplate(name: 'jnlp', image: 'openshift/jenkins-agent-nodejs-8-centos7:v3.11', ttyEnabled: true),
     containerTemplate(name: 'tools', image: 'argoproj/argo-cd-ci-builder:latest', ttyEnabled: true, command: 'cat')
   ]) {
-      pipeline {  
-
+    
     environment {
         APPLICATION_NAME = 'hello-react'
         GIT_REPO="https://github.com/sjp147/hello-react.git"
