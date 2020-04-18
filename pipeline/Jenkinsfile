@@ -5,7 +5,6 @@ podTemplate(containers: [
     containerTemplate(name: 'tools', image: 'argoproj/argo-cd-ci-builder:latest', ttyEnabled: true, command: 'cat')
   ]) {
     
-    environment {
         APPLICATION_NAME = 'hello-react'
         GIT_REPO="https://github.com/sjp147/hello-react.git"
         GIT_BRANCH="master"
@@ -16,7 +15,6 @@ podTemplate(containers: [
         TEMPLATE_NAME = "hello-react"
         ARTIFACT_FOLDER = "target"
         PORT = 8081;
-    }
     
     node(POD_LABEL) {
         
