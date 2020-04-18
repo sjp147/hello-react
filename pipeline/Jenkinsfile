@@ -1,10 +1,27 @@
+pipeline {
 
-    
-podTemplate(containers: [
-    containerTemplate(name: 'jnlp', image: 'openshift/jenkins-agent-nodejs-8-centos7:v3.11', ttyEnabled: true),
-    containerTemplate(name: 'tools', image: 'argoproj/argo-cd-ci-builder:latest', ttyEnabled: true, command: 'cat')
-  ]) {
-    
+    agent {
+        kubernetes {
+        label 'jenkins-slave'
+        defaultContainer 'jnlp'
+        yaml """
+apiVersion: v1
+kind: Pod
+spec:
+    containers:
+    - name: jnlp
+      image: openshift/jenkins-agent-nodejs-8-centos7:v3.11
+      tty: true
+    - name: tools
+      image: argoproj/argo-cd-ci-builder:latest
+      command:
+      - cat
+      tty: true
+        """
+        }
+    }
+
+    environment {
         APPLICATION_NAME = 'hello-react'
         GIT_REPO="https://github.com/sjp147/hello-react.git"
         GIT_BRANCH="master"
@@ -15,24 +32,27 @@ podTemplate(containers: [
         TEMPLATE_NAME = "hello-react"
         ARTIFACT_FOLDER = "target"
         PORT = 8081;
-    
-    node(POD_LABEL) {
-        
+    }
+    stages {
         stage('Get Latest Code') {
+            steps {
                 git branch: "${GIT_BRANCH}", url: "${GIT_REPO}"
-          
+            }
         }
 
         stage('Create web app'){
+            steps{
                     dir("app") {
 
                             sh "npm ci"
                             sh "npm run build"
 
                     }
+            }
         }
 
          stage('Store web app'){
+            steps{
                 script{
                     def safeBuildName  = "${APPLICATION_NAME}_${BUILD_NUMBER}",
                         artifactFolder = "${ARTIFACT_FOLDER}",
@@ -49,6 +69,7 @@ podTemplate(containers: [
                     sh "tar -czvf ${applicationZip} ${applicationDir}"
                     archiveArtifacts artifacts: "${applicationZip}", excludes: null, onlyIfSuccessful: true
                 }
+            }
         }
 
 
@@ -62,6 +83,7 @@ podTemplate(containers: [
                 }
             }
         }
+        steps {
             script {
                 openshift.withCluster() {
                     openshift.withProject(DEV_PROJECT) {
@@ -69,28 +91,30 @@ podTemplate(containers: [
                         }
                     }
                 }
-   
+            }
         }
 
         stage('Build Image') {
+            steps {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(env.DEV_PROJECT) {
                             openshift.selector("bc", "$TEMPLATE_NAME").startBuild("--from-archive=${ARTIFACT_FOLDER}/${APPLICATION_NAME}_${BUILD_NUMBER}.tar.gz", "--wait=true")
                         }
-                    
+                    }
                 }
             }
         }
 
         stage('Deploy to dev') {
+            steps {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(env.DEV_PROJECT) {
 
                         openshift.tag("${APPLICATION_NAME}:latest", "${APPLICATION_NAME}:${env.GIT_COMMIT}") 
                         }
-                    
+                    }
                 }
                     container('tools') {
 
@@ -104,8 +128,8 @@ podTemplate(containers: [
                         sh "git commit -am 'Publish new version' && git push || echo 'no changes'"
                     }
             }
-                }
-        
+
+        }
 
     }
 }
