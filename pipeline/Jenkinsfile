@@ -18,7 +18,7 @@ podTemplate(containers: [
         PORT = 8081;
     }
     
-    node("reactapp") {
+    node(POD_LABEL) {
         
         stage('Get Latest Code') {
                 git branch: "${GIT_BRANCH}", url: "${GIT_REPO}"
