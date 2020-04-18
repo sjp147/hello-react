@@ -17,25 +17,24 @@ podTemplate(containers: [
         ARTIFACT_FOLDER = "target"
         PORT = 8081;
     }
+    
+    node("reactapp") {
+        
         stage('Get Latest Code') {
-            steps {
                 git branch: "${GIT_BRANCH}", url: "${GIT_REPO}"
-            }
+          
         }
 
         stage('Create web app'){
-            steps{
                     dir("app") {
 
                             sh "npm ci"
                             sh "npm run build"
 
                     }
-            }
         }
 
          stage('Store web app'){
-            steps{
                 script{
                     def safeBuildName  = "${APPLICATION_NAME}_${BUILD_NUMBER}",
                         artifactFolder = "${ARTIFACT_FOLDER}",
@@ -52,7 +51,6 @@ podTemplate(containers: [
                     sh "tar -czvf ${applicationZip} ${applicationDir}"
                     archiveArtifacts artifacts: "${applicationZip}", excludes: null, onlyIfSuccessful: true
                 }
-            }
         }
 
 
@@ -66,7 +64,6 @@ podTemplate(containers: [
                 }
             }
         }
-        steps {
             script {
                 openshift.withCluster() {
                     openshift.withProject(DEV_PROJECT) {
@@ -74,30 +71,28 @@ podTemplate(containers: [
                         }
                     }
                 }
-            }
+   
         }
 
         stage('Build Image') {
-            steps {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(env.DEV_PROJECT) {
                             openshift.selector("bc", "$TEMPLATE_NAME").startBuild("--from-archive=${ARTIFACT_FOLDER}/${APPLICATION_NAME}_${BUILD_NUMBER}.tar.gz", "--wait=true")
                         }
-                    }
+                    
                 }
             }
         }
 
         stage('Deploy to dev') {
-            steps {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(env.DEV_PROJECT) {
 
                         openshift.tag("${APPLICATION_NAME}:latest", "${APPLICATION_NAME}:${env.GIT_COMMIT}") 
                         }
-                    }
+                    
                 }
                     container('tools') {
 
