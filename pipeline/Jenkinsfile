@@ -133,7 +133,7 @@ spec:
                         
                     }
 
-                    container('argo-cli') {
+                    container('argocd-cli') {
                         sh "ARGOCD_SERVER=argocd-server-argocd.192.168.64.7.nip.io argocd --grpc-web app sync hello-react --force"
                         sh "ARGOCD_SERVER=argocd-server-argocd.192.168.64.7.nip.io argocd --grpc-web app wait hello-react --timeout 600"
                     }
