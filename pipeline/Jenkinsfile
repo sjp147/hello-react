@@ -52,7 +52,7 @@ spec:
                         withCredentials([sshUserPrivateKey(credentialsId: "cicd-bitbucket", keyFileVariable: 'KEYFILE')]) {
                             sh '''
                             
-                            GIT_SSH_COMMAND="ssh -i $KEYFILE" git clone git@github.com:sjp147/hello-config.git
+                            GIT_SSH_COMMAND="ssh -i $KEYFILE" git clone ssh://git@github.com/sjp147/hello-config.git
                             cd hello-config
                             ls -l
                             '''
