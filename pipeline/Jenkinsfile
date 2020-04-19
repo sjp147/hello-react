@@ -13,12 +13,7 @@ spec:
       image: openshift/jenkins-agent-nodejs-8-centos7:v3.11
       tty: true
     - name: tools
-      image: argoproj/argo-cd-ci-builder:latest
-      command:
-      - cat
-      tty: true
-    - name: argocd-cli
-      image: argoproj/argocd-cli:v0.10.6
+      image: 172.30.1.1:5000/cicd/openshift-build-tools:latest
       command:
       - cat
       tty: true
