@@ -12,9 +12,15 @@ spec:
     - name: jnlp
       image: openshift/jenkins-agent-nodejs-8-centos7:v3.11
       tty: true
- 
+    - name: tools
+      image: argoproj/argo-cd-ci-builder:latest
+      command:
+      - cat
+      tty: true
     - name: argocd-cli
       image: argoproj/argocd-cli:v0.10.6
+      command:
+      - cat
       tty: true
         """
         }
