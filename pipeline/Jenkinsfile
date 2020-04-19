@@ -54,7 +54,7 @@ spec:
                     
                     
                         withCredentials([sshUserPrivateKey(credentialsId: "cicd-bitbucket", keyFileVariable: 'KEYFILE')]) {
-                            sh "echo \"$KEYFILE\" > ssh_key"
+                            sh "cat $KEYFILE > ssh_key"
                                 }
 
 
