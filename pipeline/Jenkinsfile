@@ -135,7 +135,7 @@ spec:
                         
                     }
 
-                    sh "wget https://github.com/argoproj/argo-cd/releases/download/v1.4.3/argocd-linux-amd64"
+                    sh "curl -O https://github.com/argoproj/argo-cd/releases/download/v1.4.3/argocd-linux-amd64"
                     sh "chown 777 argocd-linux-amd64"            
                                         withCredentials([string(credentialsId: "argocd-deploy", variable: 'ARGOCD_AUTH_TOKEN')]) {
 
