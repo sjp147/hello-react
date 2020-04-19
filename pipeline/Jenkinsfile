@@ -133,8 +133,8 @@ spec:
 
                         withCredentials([string(credentialsId: "argocd-deploy", variable: 'ARGOCD_AUTH_TOKEN')]) {
 
-                        sh "ARGOCD_SERVER=argocd-server-argocd.192.168.64.7.nip.io argocd --grpc-web app sync hello-react --force"
-                        sh "ARGOCD_SERVER=argocd-server-argocd.192.168.64.7.nip.io argocd --grpc-web app wait hello-react --timeout 60"
+                        sh "ARGOCD_SERVER=argocd-server-argocd.192.168.64.7.nip.io argocd --grpc-web app sync hello-react --force --insecure"
+                        sh "ARGOCD_SERVER=argocd-server-argocd.192.168.64.7.nip.io argocd --grpc-web app wait hello-react --timeout 60 --insecure"
                                         }
                     
                     
