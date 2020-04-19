@@ -14,8 +14,6 @@ spec:
       tty: true
     - name: tools
       image: argoproj/argo-cd-ci-builder:latest
-      command:
-      - cat
       tty: true
     - name: argocd-cli
       image: argoproj/argocli:v2.3.0
