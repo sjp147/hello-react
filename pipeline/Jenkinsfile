@@ -117,9 +117,10 @@ spec:
                     }
                 }
                     container('tools') {
-                       sh "git config --system user.email 'you@example.com'"
-                        sh "git config --system user.name 'Your Name'"
-                        sh "env"
+                          sh "env"
+                       sh "git config user.email 'you@example.com'"
+                        sh "git config user.name 'Your Name'"
+                      
                     sh 'git clone https://$GIT_CREDS_USR:$GIT_CREDS_PSW@github.com/sjp147/hello-config.git'
                     dir("hello-config") {
  
