@@ -32,6 +32,8 @@ spec:
         TEMPLATE_NAME = "hello-react"
         ARTIFACT_FOLDER = "target"
         PORT = 8081;
+        GIT_COMMITTER_NAME = "Jenkins"
+        GIT_COMMITTER_EMAIL = "Jenkins@openshift"
     }
     stages {
         stage('Get Latest Code') {
@@ -118,8 +120,6 @@ spec:
                 }
                     container('tools') {
                           sh "env"
-                       sh "git config user.email 'you@example.com'"
-                        sh "git config user.name 'Your Name'"
                       
                     sh 'git clone https://$GIT_CREDS_USR:$GIT_CREDS_PSW@github.com/sjp147/hello-config.git'
                     dir("hello-config") {
