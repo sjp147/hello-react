@@ -52,24 +52,15 @@ spec:
                       
                     //sh 'git clone https://$GIT_CREDS_USR:$GIT_CREDS_PSW@github.com/sjp147/hello-config.git'
                     
-                    
+                    sh GIT_SSH = ""
                         withCredentials([sshUserPrivateKey(credentialsId: "cicd-bitbucket", keyFileVariable: 'KEYFILE')]) {
-                            sh "cat $KEYFILE > ssh_key"
+                            sh '''
+                            GIT_SSH="ssh -i $KEYFILE" 
+                            git clone ssh://git@github.com/sjp147/hello-config.git
+                            cd hello-config
+                            ls -l
+                            '''
                                 }
-
-
-                    sh "cat ssh_key"
-                                    sh "GIT_SSH='ssh -i ssh_key' git clone ssh://git@github.com/sjp147/hello-config.git"
-                    dir("hello-config") {
- 
-                       sh "git config user.email 'you@example.com'"
-                                              sh "git config user.name 'Jenkins'"
-
-
-                        sh "cd ./dev && kustomize edit set image 172.30.1.1:5000/dev/hello-react:${env.GIT_COMMIT}"
-                        sh "git diff"
-                        sh "GIT_SSH='ssh -i ../ssh_key' git commit -am 'Publish new version' && GIT_SSH='ssh -i ../ssh_key' git push || echo 'no changes'"
-                        }
                             
 
             
