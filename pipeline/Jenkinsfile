@@ -136,7 +136,7 @@ spec:
                     }
 
                     sh "curl -o argocd https://github.com/argoproj/argo-cd/releases/download/v1.4.3/argocd-linux-amd64"
-                    sh "sudo chown 777 argocd"            
+                    sh "ls -lrt"            
                         withCredentials([string(credentialsId: "argocd-deploy", variable: 'ARGOCD_AUTH_TOKEN')]) {
 
                         sh "ARGOCD_SERVER=argocd-server-argocd.192.168.64.7.nip.io ./argocd --grpc-web app sync hello-react --force --verbose"
