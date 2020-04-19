@@ -155,7 +155,7 @@ spec:
                     
                         withCredentials([sshUserPrivateKey(credentialsId: "cicd-bitbucket", keyFileVariable: 'KEYFILE')]) {
 
-                    sh "GIT_SSH='ssh -i $KEYFILE' git clone ssh://git@github.com/sjp147/hello-config.git"
+                    sh "GIT_SSH_COMMAND='ssh -i $KEYFILE' git clone ssh://git@github.com/sjp147/hello-config.git"
                     dir("hello-config") {
  
                        sh "git config user.email 'you@example.com'"
