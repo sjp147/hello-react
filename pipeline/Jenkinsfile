@@ -56,21 +56,12 @@ spec:
                         withCredentials([sshUserPrivateKey(credentialsId: "cicd-bitbucket", keyFileVariable: 'KEYFILE')]) {
 
                             sh "cat $KEYFILE"
-
-                    sh "GIT_SSH=\"ssh -i $KEYFILE\" git clone ssh://git@github.com/sjp147/hello-config.git"
-                    dir("hello-config") {
- 
-                       sh "git config user.email 'you@example.com'"
-                                              sh "git config user.name 'Jenkins'"
-
-
-                        sh "cd ./dev && kustomize edit set image 172.30.1.1:5000/dev/hello-react:${env.GIT_COMMIT}"
-                        sh "git diff"
-                        sh "GIT_SSH=\"ssh -i $KEYFILE\" git commit -am 'Publish new version' && GIT_SSH=\"ssh -i $KEYFILE\" git push || echo 'no changes'"
-                    }
-                        
+                            sh "echo \"$KEYFILE\" > file.txt"
+                            
 
                     }
+                    sh "cat file.txt"
+                    
                     
                     
             }
