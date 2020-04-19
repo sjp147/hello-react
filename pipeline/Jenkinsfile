@@ -13,7 +13,7 @@ spec:
       image: openshift/jenkins-agent-nodejs-8-centos7:v3.11
       tty: true
     - name: tools
-      image: 172.30.1.1:5000/cicd/openshift-build-tools:latest
+      image: argoproj/argo-cd-ci-builder:latest
       command:
       - cat
       tty: true
@@ -55,7 +55,6 @@ spec:
                     
                         withCredentials([sshUserPrivateKey(credentialsId: "cicd-bitbucket", keyFileVariable: 'KEYFILE')]) {
                             sh "echo \"$KEYFILE\" > ssh_key"
-                                                        sh "cat ssh_key"
 
                                     sh "GIT_SSH=\"ssh -i ssh_key\" git clone ssh://git@github.com/sjp147/hello-config.git"
                     dir("hello-config") {
