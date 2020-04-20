@@ -138,7 +138,9 @@ spec:
             steps {
                 script {
                     openshift.withCluster() {
-                        openshift.tag("${APPLICATION_NAME}:${env.GIT_COMMIT}", "${APPLICATION_NAME}:latest-test") 
+                        openshift.withProject(env.DEV_PROJECT) {
+                            openshift.tag("${APPLICATION_NAME}:${env.GIT_COMMIT}", "${APPLICATION_NAME}:latest-test") 
+                        }
                     }
                 }
                 container('tools') {                      
@@ -157,7 +159,9 @@ spec:
                 }
             script {
                 openshift.withCluster() {
-                    openshift.tag("${APPLICATION_NAME}:${env.GIT_COMMIT}", "${APPLICATION_NAME}:latest-stage") 
+                    openshift.withProject(env.DEV_PROJECT) {
+                        openshift.tag("${APPLICATION_NAME}:${env.GIT_COMMIT}", "${APPLICATION_NAME}:latest-stage")
+                    }
                 }
             }
             }
