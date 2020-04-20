@@ -13,7 +13,7 @@ spec:
       image: openshift/jenkins-agent-nodejs-8-centos7:v3.11
       tty: true
     - name: tools
-      image: argoproj/argo-cd-ci-builder:latest
+      image: 172.30.1.1:5000/cicd/openshift-build-tools:latest
       command:
       - cat
       tty: true
@@ -65,6 +65,9 @@ spec:
                             chmod 777 ssh-wrapper.sh
 
                             ./ssh-wrapper.sh -T git@hithub.com
+
+                            GIT_SSH=ssh-wrapper.sh
+                            git clone 
 
 
 
