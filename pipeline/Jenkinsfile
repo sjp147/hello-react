@@ -30,6 +30,7 @@ spec:
         ARTIFACT_FOLDER = "target"
         ARGOCD_SERVER = "argocd-server-argocd.192.168.64.7.nip.io"
         DOCKER_REGISTRY = "172.30.1.1:5000"
+        DOCKER_NAMESPACE = "dev"
     }
 
     stages {
@@ -119,7 +120,7 @@ spec:
                     container('tools') {
                           sh "env"
                       
-            deployImageArgoCd("${env.APPLICATION_NAME}-dev", "${env.DOCKER_REGISTRY}/dev/hello-react:${env.GIT_COMMIT}")
+            deployImageArgoCd("${env.APPLICATION_NAME}-dev", "${env.DOCKER_REGISTRY}/${env.DOCKER_NAMESPACE}/${APPLICATION_NAME}:${env.GIT_COMMIT}")
                     
                     
             }
@@ -133,13 +134,8 @@ spec:
                 
                     container('tools') {                      
             
+  deployImageArgoCd("${env.APPLICATION_NAME}-test", "${env.DOCKER_REGISTRY}/${env.DOCKER_NAMESPACE}/${APPLICATION_NAME}:${env.GIT_COMMIT}")
 
-                        withCredentials([string(credentialsId: "argocd-deploy", variable: 'ARGOCD_AUTH_TOKEN')]) {
-                        sh "ARGOCD_SERVER=argocd-server-argocd.192.168.64.7.nip.io argocd --grpc-web app set hello-react-test --kustomize-image 172.30.1.1:5000/dev/hello-react:${env.GIT_COMMIT} --insecure"
-
-                        sh "ARGOCD_SERVER=argocd-server-argocd.192.168.64.7.nip.io argocd --grpc-web app sync hello-react-test --force --insecure"
-                        sh "ARGOCD_SERVER=argocd-server-argocd.192.168.64.7.nip.io argocd --grpc-web app wait hello-react-test --timeout 60 --insecure"
-                                        }
                     
                     
             }
@@ -163,12 +159,8 @@ spec:
                       
             
 
-                        withCredentials([string(credentialsId: "argocd-deploy", variable: 'ARGOCD_AUTH_TOKEN')]) {
-                        sh "ARGOCD_SERVER=argocd-server-argocd.192.168.64.7.nip.io argocd --grpc-web app set hello-react-stage --kustomize-image 172.30.1.1:5000/dev/hello-react:${env.GIT_COMMIT} --insecure"
+                               deployImageArgoCd("${env.APPLICATION_NAME}-stage", "${env.DOCKER_REGISTRY}/${env.DOCKER_NAMESPACE}/${APPLICATION_NAME}:${env.GIT_COMMIT}")
 
-                        sh "ARGOCD_SERVER=argocd-server-argocd.192.168.64.7.nip.io argocd --grpc-web app sync hello-react-stage --force --insecure"
-                        sh "ARGOCD_SERVER=argocd-server-argocd.192.168.64.7.nip.io argocd --grpc-web app wait hello-react-stage --timeout 60 --insecure"
-                                        }
                     
                     
             }
