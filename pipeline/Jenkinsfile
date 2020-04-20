@@ -20,28 +20,23 @@ spec:
         """
         }
     }
-
-  /*  environment {
+    
+    environment {
         APPLICATION_NAME = 'hello-react'
-        GIT_REPO="https://github.com/sjp147/hello-react.git"
         GIT_BRANCH="master"
-        STAGE_TAG = "promoteToQA"
-        CICD_PROJECT="cicd"
         DEV_PROJECT = "dev"
         TEST_PROJECT = "test"
         STAGE_PROJECT = "stage"
-        TEMPLATE_NAME = "hello-react"
+
+        APPLICATION_NAME = "hello-react"
         ARTIFACT_FOLDER = "target"
-        PORT = 8081;
-        GIT_COMMITTER_NAME = "Jenkins"
-        GIT_COMMITTER_EMAIL = "Jenkins@openshift"
-        //GIT_SSH="ssh -i /ssh/ssh-privatekey"
-    }*/
+    }
+    
     stages {
         stage('Get Latest Code') {
             steps {
                 sh "env"
-                git branch: "${GIT_BRANCH}", url: "${GIT_REPO}"
+                git branch: "${GIT_BRANCH}", url: "${GIT_URL}"
             }
         }
 
@@ -85,7 +80,7 @@ spec:
                 expression {
                     openshift.withCluster() {
                         openshift.withProject(DEV_PROJECT) {
-                            return !openshift.selector("bc", "${TEMPLATE_NAME}").exists();
+                            return !openshift.selector("bc", "${APPLICATION_NAME}").exists();
                         }
                 }
             }
@@ -94,7 +89,7 @@ spec:
             script {
                 openshift.withCluster() {
                     openshift.withProject(DEV_PROJECT) {
-                        openshift.newBuild("--name=${TEMPLATE_NAME}", "--docker-image=docker.io/nginx:mainline-alpine", "--binary=true")
+                        openshift.newBuild("--name=${APPLICATION_NAME}", "--docker-image=docker.io/nginx:mainline-alpine", "--binary=true")
                         }
                     }
                 }
@@ -106,7 +101,7 @@ spec:
                 script {
                     openshift.withCluster() {
                         openshift.withProject(env.DEV_PROJECT) {
-                            openshift.selector("bc", "$TEMPLATE_NAME").startBuild("--from-archive=${ARTIFACT_FOLDER}/${APPLICATION_NAME}_${BUILD_NUMBER}.tar.gz", "--wait=true")
+                            openshift.selector("bc", "$APPLICATION_NAME").startBuild("--from-archive=${ARTIFACT_FOLDER}/${APPLICATION_NAME}_${BUILD_NUMBER}.tar.gz", "--wait=true")
                         }
                     }
                 }
