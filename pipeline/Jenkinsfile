@@ -21,7 +21,7 @@ spec:
         }
     }
 
-    environment {
+  /*  environment {
         APPLICATION_NAME = 'hello-react'
         GIT_REPO="https://github.com/sjp147/hello-react.git"
         GIT_BRANCH="master"
@@ -36,10 +36,11 @@ spec:
         GIT_COMMITTER_NAME = "Jenkins"
         GIT_COMMITTER_EMAIL = "Jenkins@openshift"
         //GIT_SSH="ssh -i /ssh/ssh-privatekey"
-    }
+    }*/
     stages {
         stage('Get Latest Code') {
             steps {
+                sh "env"
                 git branch: "${GIT_BRANCH}", url: "${GIT_REPO}"
             }
         }
