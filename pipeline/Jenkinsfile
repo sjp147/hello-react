@@ -50,11 +50,26 @@ spec:
                     container('tools') {
 
 
-sshagent (credentials: ['cicd-bitbucket']) {
-    //sh 'ssh -o StrictHostKeyChecking=no -l github.com 140.82.118.4 uname -a'
-    sh 'git clone ssh://git@github.com/sjp147/hello-config.git'
-  }
-                    
+
+                        withCredentials([sshUserPrivateKey(credentialsId: "cicd-bitbucket", keyFileVariable: 'KEYFILE')]) {
+
+
+                            sh '''
+
+                            echo "#!/bin/bash
+
+                            ID_RSA=\"$KEYFILE\"
+
+                            ssh -o UserKnownHostsFile=/dev/null -i $ID_RSA $1 $2" > ssh-wrapper.sh
+
+                            chmod 777 ssh-wrapper.sh
+
+                            ./sshwrapper.sh -T git@hithub.com
+
+
+
+                            '''
+                                }
                             
 
             
