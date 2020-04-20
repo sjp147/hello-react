@@ -64,7 +64,7 @@ spec:
 
                             chmod 777 ssh-wrapper.sh
 
-                            ./sshwrapper.sh -T git@hithub.com
+                            ./ssh-wrapper.sh -T git@hithub.com
 
 
 
