@@ -51,7 +51,7 @@ spec:
 
 
 sshagent (credentials: ['cicd-bitbucket']) {
-    sh 'ssh -o StrictHostKeyChecking=no -l github.com 140.82.118.4 uname -a'
+    //sh 'ssh -o StrictHostKeyChecking=no -l github.com 140.82.118.4 uname -a'
     sh 'git clone ssh://git@github.com/sjp147/hello-config.git'
   }
                     
