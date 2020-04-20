@@ -28,6 +28,7 @@ spec:
         STAGE_TAG = "promoteToQA"
         CICD_PROJECT="cicd"
         DEV_PROJECT = "dev"
+        TEST_PROJECT = "test"
         STAGE_PROJECT = "stage"
         TEMPLATE_NAME = "hello-react"
         ARTIFACT_FOLDER = "target"
@@ -131,6 +132,47 @@ spec:
 
                         sh "ARGOCD_SERVER=argocd-server-argocd.192.168.64.7.nip.io argocd --grpc-web app sync hello-react --force --insecure"
                         sh "ARGOCD_SERVER=argocd-server-argocd.192.168.64.7.nip.io argocd --grpc-web app wait hello-react --timeout 60 --insecure"
+                                        }
+                    
+                    
+            }
+
+        }
+
+    }
+
+    stage('Deploy to test') {
+            steps {
+                
+                    container('tools') {                      
+            
+
+                        withCredentials([string(credentialsId: "argocd-deploy", variable: 'ARGOCD_AUTH_TOKEN')]) {
+                        sh "ARGOCD_SERVER=argocd-server-argocd.192.168.64.7.nip.io argocd --grpc-web app set hello-react-test --kustomize-image 172.30.1.1:5000/dev/hello-react:${env.GIT_COMMIT} --insecure"
+
+                        sh "ARGOCD_SERVER=argocd-server-argocd.192.168.64.7.nip.io argocd --grpc-web app sync hello-react-test --force --insecure"
+                        sh "ARGOCD_SERVER=argocd-server-argocd.192.168.64.7.nip.io argocd --grpc-web app wait hello-react-test --timeout 60 --insecure"
+                                        }
+                    
+                    
+            }
+
+        }
+
+    }
+
+    stage('Deploy to stage') {
+            steps {
+
+                    container('tools') {
+                      
+            
+
+                        withCredentials([string(credentialsId: "argocd-deploy", variable: 'ARGOCD_AUTH_TOKEN')]) {
+                        sh "ARGOCD_SERVER=argocd-server-argocd.192.168.64.7.nip.io argocd --grpc-web app set hello-react-stage --kustomize-image 172.30.1.1:5000/dev/hello-react:${env.GIT_COMMIT} --insecure"
+
+                        sh "ARGOCD_SERVER=argocd-server-argocd.192.168.64.7.nip.io argocd --grpc-web app sync hello-react-stage --force --insecure"
+                        sh "ARGOCD_SERVER=argocd-server-argocd.192.168.64.7.nip.io argocd --grpc-web app wait hello-react-stage --timeout 60 --insecure"
                                         }
                     
                     
