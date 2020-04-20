@@ -27,11 +27,9 @@ spec:
         DEV_PROJECT = "dev"
         TEST_PROJECT = "test"
         STAGE_PROJECT = "stage"
-
-        APPLICATION_NAME = "hello-react"
         ARTIFACT_FOLDER = "target"
     }
-    
+
     stages {
         stage('Get Latest Code') {
             steps {
