@@ -34,11 +34,9 @@ spec:
         stage('Get Latest Code') {
             steps {
                 sh "env"
-                git branch: "${GIT_BRANCH}", url: "${GIT_URL}"
+                git branch: "${GIT_BRANCH}", url: "${GIT_URL}", credentialsId: "cicd-bitbucket"
             }
         }
-
-    
 
         stage('Create web app'){
             steps{
