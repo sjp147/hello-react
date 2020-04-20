@@ -107,18 +107,20 @@ spec:
             }
         }
 
-        stage('Deploy to dev') {
-            steps {
-                script {
+        stage('Tag Image') {
+              script {
                     openshift.withCluster() {
                         openshift.withProject(env.DEV_PROJECT) {
-
                         openshift.tag("${APPLICATION_NAME}:latest", "${APPLICATION_NAME}:${env.GIT_COMMIT}") 
                         }
                     }
                 }
+        }
+
+        stage('Deploy to dev') {
+            steps {
+              
                     container('tools') {
-                          sh "env"
                       
             deployImageArgoCd("${env.APPLICATION_NAME}-dev", "${env.DOCKER_REGISTRY}/${env.DOCKER_NAMESPACE}/${APPLICATION_NAME}:${env.GIT_COMMIT}")
                     
@@ -129,9 +131,15 @@ spec:
 
     }
 
+
+    
     stage('Deploy to test') {
             steps {
-                
+                script {
+          openshift.withCluster() {
+                        openshift.tag("${APPLICATION_NAME}:${env.GIT_COMMIT}", "${APPLICATION_NAME}:latest-test", ) 
+            }
+        }
                     container('tools') {                      
             
   deployImageArgoCd("${env.APPLICATION_NAME}-test", "${env.DOCKER_REGISTRY}/${env.DOCKER_NAMESPACE}/${APPLICATION_NAME}:${env.GIT_COMMIT}")
@@ -149,6 +157,11 @@ spec:
                 timeout(time:15, unit:'MINUTES') {
                     input message: "Promote to STAGE?", ok: "Promote"
                 }
+            script {
+                openshift.withCluster() {
+                    openshift.tag("${APPLICATION_NAME}:${env.GIT_COMMIT}", "${APPLICATION_NAME}:latest-stage") 
+                }
+            }
             }
         }
 
@@ -157,12 +170,8 @@ spec:
 
                     container('tools') {
                       
-            
-
                                deployImageArgoCd("${env.APPLICATION_NAME}-stage", "${env.DOCKER_REGISTRY}/${env.DOCKER_NAMESPACE}/${APPLICATION_NAME}:${env.GIT_COMMIT}")
 
-                    
-                    
             }
 
         }
