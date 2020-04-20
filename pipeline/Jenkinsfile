@@ -161,9 +161,13 @@ spec:
 
     }
 
-    stage('Deploy approval'){
-    input "Deploy to stage?"
-}
+   stage('Promote to STAGE?') {
+            steps {
+                timeout(time:15, unit:'MINUTES') {
+                    input message: "Promote to STAGE?", ok: "Promote"
+                }
+            }
+        }
 
     stage('Deploy to stage') {
             steps {
