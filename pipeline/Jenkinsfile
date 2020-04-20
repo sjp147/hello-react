@@ -161,6 +161,10 @@ spec:
 
     }
 
+    stage('Deploy approval'){
+    input "Deploy to stage?"
+}
+
     stage('Deploy to stage') {
             steps {
 
