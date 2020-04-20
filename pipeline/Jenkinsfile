@@ -124,7 +124,7 @@ spec:
               
                     container('tools') {
                       
-            deployImageArgoCd("${env.APPLICATION_NAME}-dev", "${env.DOCKER_REGISTRY}/${env.DOCKER_NAMESPACE}/${APPLICATION_NAME}:${env.GIT_COMMIT}")
+            deployImageArgoCd("${env.APPLICATION_NAME}-dev", "${APPLICATION_NAME}:${env.GIT_COMMIT}")
                     
                     
             }
@@ -132,7 +132,6 @@ spec:
         }
 
     }
-
 
     
     stage('Deploy to test') {
@@ -144,7 +143,7 @@ spec:
                 }
                 container('tools') {                      
             
-                    deployImageArgoCd("${env.APPLICATION_NAME}-test", "${env.DOCKER_REGISTRY}/${env.DOCKER_NAMESPACE}/${APPLICATION_NAME}:${env.GIT_COMMIT}")            
+                    deployImageArgoCd("${env.APPLICATION_NAME}-test", "${APPLICATION_NAME}:${env.GIT_COMMIT}")            
             }
 
         }
