@@ -108,6 +108,7 @@ spec:
         }
 
         stage('Tag Image') {
+            steps {
               script {
                     openshift.withCluster() {
                         openshift.withProject(env.DEV_PROJECT) {
@@ -115,6 +116,7 @@ spec:
                         }
                     }
                 }
+            }
         }
 
         stage('Deploy to dev') {
@@ -136,16 +138,13 @@ spec:
     stage('Deploy to test') {
             steps {
                 script {
-          openshift.withCluster() {
-                        openshift.tag("${APPLICATION_NAME}:${env.GIT_COMMIT}", "${APPLICATION_NAME}:latest-test", ) 
-            }
-        }
-                    container('tools') {                      
+                    openshift.withCluster() {
+                        openshift.tag("${APPLICATION_NAME}:${env.GIT_COMMIT}", "${APPLICATION_NAME}:latest-test") 
+                    }
+                }
+                container('tools') {                      
             
-  deployImageArgoCd("${env.APPLICATION_NAME}-test", "${env.DOCKER_REGISTRY}/${env.DOCKER_NAMESPACE}/${APPLICATION_NAME}:${env.GIT_COMMIT}")
-
-                    
-                    
+                    deployImageArgoCd("${env.APPLICATION_NAME}-test", "${env.DOCKER_REGISTRY}/${env.DOCKER_NAMESPACE}/${APPLICATION_NAME}:${env.GIT_COMMIT}")            
             }
 
         }
