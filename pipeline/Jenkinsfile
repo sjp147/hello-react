@@ -1,9 +1,9 @@
 pipeline {
         agent {
-        kubernetes {
-        label 'jenkins-slave'
-        defaultContainer 'jnlp'
-        yaml """
+            kubernetes {
+                label 'jenkins-slave'
+                defaultContainer 'jnlp'
+                yaml """
 apiVersion: v1
 kind: Pod
 spec:
@@ -17,8 +17,8 @@ spec:
       - cat
       tty: true
         """
+            }
         }
-    }
 
     environment {
         APPLICATION_NAME = 'hello-react'
