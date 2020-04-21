@@ -1,23 +1,22 @@
 pipeline {
-    agent {
-        kubernetes{
-            label 'jenkins-slave'
-            defaultContainer 'jnlp'
-            yaml 
-            '''
-            apiVersion: v1
-            kind: Pod
-            spec:
-                containers:
-                - name: jnlp
-                image: openshift/jenkins-agent-nodejs-8-centos7:v3.11
-                tty: true
-                - name: tools
-                image: 172.30.1.1:5000/cicd/openshift-build-tools:latest
-                command:
-                - cat
-                tty: true
-            '''
+        agent {
+        kubernetes {
+        label 'jenkins-slave'
+        defaultContainer 'jnlp'
+        yaml """
+apiVersion: v1
+kind: Pod
+spec:
+    containers:
+    - name: jnlp
+      image: openshift/jenkins-agent-nodejs-8-centos7:v3.11
+      tty: true
+    - name: tools
+      image: 172.30.1.1:5000/cicd/openshift-build-tools:latest
+      command:
+      - cat
+      tty: true
+        """
         }
     }
 
