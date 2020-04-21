@@ -17,7 +17,7 @@ spec:
       - cat
       tty: true
         """
-            }
+             }
         }
 
     environment {
