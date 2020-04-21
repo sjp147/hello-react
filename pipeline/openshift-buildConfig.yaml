@@ -8,9 +8,11 @@ spec:
   source:
     git:
       ref: master
-       uri: https://github.com/sjp147/hello-react.git
+      uri: 'ssh://git@github.com/sjp147/hello-react.git'
+    sourceSecret:
+      name: bitbucket
+    type: Git
   strategy:
     jenkinsPipelineStrategy:
       jenkinsfilePath: pipeline/Jenkinsfile
     type: JenkinsPipeline
-  triggers: []
