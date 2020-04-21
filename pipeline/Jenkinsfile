@@ -1,26 +1,26 @@
 pipeline {
-
     agent {
         kubernetes {
         label 'jenkins-slave'
         defaultContainer 'jnlp'
-        yaml """
-apiVersion: v1
-kind: Pod
-spec:
-    containers:
-    - name: jnlp
-      image: openshift/jenkins-agent-nodejs-8-centos7:v3.11
-      tty: true
-    - name: tools
-      image: 172.30.1.1:5000/cicd/openshift-build-tools:latest
-      command:
-      - cat
-      tty: true
-        """
+        yaml 
+            '''
+            apiVersion: v1
+            kind: Pod
+            spec:
+                containers:
+                - name: jnlp
+                image: openshift/jenkins-agent-nodejs-8-centos7:v3.11
+                tty: true
+                - name: tools
+                image: 172.30.1.1:5000/cicd/openshift-build-tools:latest
+                command:
+                - cat
+                tty: true
+            '''
         }
     }
-    
+
     environment {
         APPLICATION_NAME = 'hello-react'
         GIT_BRANCH="master"
@@ -42,19 +42,17 @@ spec:
         }
 
         stage('Create web app'){
-            steps{
-                    dir("app") {
-
-                            sh "npm ci"
-                            sh "npm run build"
-
-                    }
+            steps {
+                dir("app") {
+                    sh "npm ci"
+                    sh "npm run build"
+                }
             }
         }
 
-         stage('Store web app'){
-            steps{
-                script{
+        stage('Store web app') {
+             steps {
+                script {
                     def safeBuildName  = "${APPLICATION_NAME}_${BUILD_NUMBER}",
                         artifactFolder = "${ARTIFACT_FOLDER}",
                         fullFileName   = "${safeBuildName}.tar.gz",
@@ -67,6 +65,7 @@ spec:
                     if (needTargetPath) {
                         sh "mkdir ${artifactFolder}"
                     }
+
                     sh "tar -czvf ${applicationZip} ${applicationDir}"
                     archiveArtifacts artifacts: "${applicationZip}", excludes: null, onlyIfSuccessful: true
                 }
@@ -81,19 +80,20 @@ spec:
                         openshift.withProject(DEV_PROJECT) {
                             return !openshift.selector("bc", "${APPLICATION_NAME}").exists();
                         }
+                    }
                 }
             }
-        }
-        steps {
-            script {
-                openshift.withCluster() {
-                    openshift.withProject(DEV_PROJECT) {
-                        openshift.newBuild("--name=${APPLICATION_NAME}", "--docker-image=docker.io/nginx:mainline-alpine", "--binary=true")
+            
+            steps {
+                script {
+                    openshift.withCluster() {
+                        openshift.withProject(DEV_PROJECT) {
+                            openshift.newBuild("--name=${APPLICATION_NAME}", "--docker-image=docker.io/nginx:mainline-alpine", "--binary=true")
+                            }
                         }
                     }
                 }
             }
-        }
 
         stage('Build Image') {
             steps {
@@ -109,7 +109,7 @@ spec:
 
         stage('Tag Image') {
             steps {
-              script {
+                script {
                     openshift.withCluster() {
                         openshift.withProject(env.DEV_PROJECT) {
                         openshift.tag("${APPLICATION_NAME}:latest", "${APPLICATION_NAME}:${env.GIT_COMMIT}") 
@@ -121,20 +121,13 @@ spec:
 
         stage('Deploy to dev') {
             steps {
-              
-                    container('tools') {
-                      
-            deployImageArgoCd("${env.APPLICATION_NAME}-dev", "${APPLICATION_NAME}:${env.GIT_COMMIT}")
-                    
-                    
+                container('tools') {
+                    deployImageArgoCd("${env.APPLICATION_NAME}-dev", "${APPLICATION_NAME}:${env.GIT_COMMIT}")
+                }
             }
-
         }
-
-    }
-
     
-    stage('Deploy to test') {
+        stage('Deploy to test') {
             steps {
                 script {
                     openshift.withCluster() {
@@ -143,49 +136,41 @@ spec:
                         }
                     }
                 }
-                container('tools') {                      
-            
+                container('tools') {
                     deployImageArgoCd("${env.APPLICATION_NAME}-test", "${APPLICATION_NAME}:${env.GIT_COMMIT}")            
+                }
             }
-
         }
 
-    }
-
-   stage('Promote to STAGE?') {
+        stage('Promote to STAGE?') {
             steps {
                 timeout(time:15, unit:'MINUTES') {
                     input message: "Promote to STAGE?", ok: "Promote"
                 }
-            script {
-                openshift.withCluster() {
-                    openshift.withProject(env.DEV_PROJECT) {
-                        openshift.tag("${APPLICATION_NAME}:${env.GIT_COMMIT}", "${APPLICATION_NAME}:latest-stage")
+                script {
+                    openshift.withCluster() {
+                        openshift.withProject(env.DEV_PROJECT) {
+                            openshift.tag("${APPLICATION_NAME}:${env.GIT_COMMIT}", "${APPLICATION_NAME}:latest-stage")
+                        }
                     }
                 }
             }
-            }
         }
 
-    stage('Deploy to stage') {
-            steps {
-
+        stage('Deploy to stage') {
+                steps {
                     container('tools') {
-                      
-                               deployImageArgoCd("${env.APPLICATION_NAME}-stage", "${env.DOCKER_REGISTRY}/${env.DOCKER_NAMESPACE}/${APPLICATION_NAME}:${env.GIT_COMMIT}")
-
-            }
-
+                        deployImageArgoCd("${env.APPLICATION_NAME}-stage", "${env.DOCKER_REGISTRY}/${env.DOCKER_NAMESPACE}/${APPLICATION_NAME}:${env.GIT_COMMIT}")
+                    }
+                }
         }
-
     }
-}
 }
 
 void deployImageArgoCd(deployId, imageTag) {
     withCredentials([string(credentialsId: "argocd-deploy", variable: 'ARGOCD_AUTH_TOKEN')]) {
-                        sh "argocd --grpc-web app set "+ deployId + " --insecure --kustomize-image " + imageTag
-                        sh "argocd --grpc-web app sync "+ deployId + " --force --insecure"
-                        sh "argocd --grpc-web app wait "+ deployId + " --timeout 60 --insecure"
-                                        }
+        sh "argocd --grpc-web app set "+ deployId + " --insecure --kustomize-image " + imageTag
+        sh "argocd --grpc-web app sync "+ deployId + " --force --insecure"
+        sh "argocd --grpc-web app wait "+ deployId + " --timeout 60 --insecure"
+    }
 }
